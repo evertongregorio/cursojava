@@ -1,0 +1,70 @@
+<meta charset="UTF-8">
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Jogo da Forca</title>
+	<script>
+		// criando array com palavras para o jogador adivinhar
+		var words = ["santa cruz", "banana", "laranja", "morango", "uva"];
+		var selectedWord = words[Math.floor(Math.random() * words.length)];
+		var guesses = [];
+		var mistakes = 0;
+
+		function displayWord() {
+			var output = "";
+			for(var i = 0; i < selectedWord.length; i++) {
+				if(guesses.indexOf(selectedWord[i]) != -1) {
+					output += selectedWord[i] + " ";
+				} else {
+					output += "_ ";
+				}
+			}
+			document.getElementById("word").innerHTML = output;
+		}
+
+		function guessLetter() {
+			var letter = document.getElementById("letter").value;
+			if(guesses.indexOf(letter) == -1) {
+				guesses.push(letter);
+				if(selectedWord.indexOf(letter) == -1) {
+					mistakes++;
+				}
+			}
+			displayWord();
+			displayMistakes();
+			checkGameOver();
+			document.getElementById("letter").value = "";
+		}
+
+		function displayMistakes() {
+			document.getElementById("mistakes").innerHTML = "Erros: " + mistakes;
+		}
+
+		function checkGameOver() {
+			if(mistakes >= 6) {
+				document.getElementById("result").innerHTML = "Você perdeu! A palavra era " + selectedWord + ".";
+				disableInput();
+			}
+			if(selectedWord.split("").every(letter => guesses.indexOf(letter) != -1)) {
+				document.getElementById("result").innerHTML = "Você ganhou!";
+				disableInput();
+			}
+		}
+
+		function disableInput() {
+			document.getElementById("letter").disabled = true;
+			document.getElementById("button").disabled = true;
+		}
+	</script>
+</head>
+<body>
+	<h1>Jogo da Forca</h1>
+	<p>Adivinhe a palavra:</p>
+	<p id="word"></p>
+	<p id="mistakes">Erros: 0</p>
+	<input type="text" id="letter">
+	<button id="button" onclick="guessLetter()">Adivinhar letra</button>
+	<p id="result"></p>
+	<script>displayWord();</script>
+</body>
+</html>
